@@ -21,6 +21,7 @@
 - [x] Coverage threshold >=80%
 - [x] Bandit configured
 - [x] pip-audit configured
+- [x] End-to-end smoke workflow configured
 - [ ] CI green on release commit
 - [ ] Smoke test green
 
@@ -28,9 +29,11 @@
 
 - [x] README
 - [x] SECURITY.md
-- [ ] LICENSE file
+- [x] LICENSE file
 - [x] Release checklist
-- [ ] GitHub Pages live
+- [x] GitHub Pages workflow configured
+- [x] Public demo files committed
+- [ ] GitHub Pages live verification
 - [ ] Public demo smoke check
 
 ## Release
