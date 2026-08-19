@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>SpectraSec Security Control Mapper</title>
-  <meta name="description" content="Explore technical findings, contextual risk and supporting control references across ISO 27001, NIS2, ENS and SOC 2.">
+  <meta name="description" content="Explore technical findings, contextual risk and supporting control references across security and compliance frameworks.">
   <link rel="canonical" href="https://cyber-g3.github.io/security-control-mapper/">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,15 +13,15 @@
     <section class="hero">
       <p class="eyebrow">SpectraSec Open Source</p>
       <h1>Security Control & Risk Explorer</h1>
-      <p class="lede">Prioritize technical findings using explicit business context, then explore supporting control references and expected evidence.</p>
+      <p class="lede">Prioritize technical findings using explicit business context, then explore supporting control references, expected evidence and remediation priorities.</p>
       <p class="notice">Risk scores and framework mappings are decision-support indicators. They do not establish compliance, certification or legal applicability.</p>
     </section>
 
     <section class="panel controls">
       <div><label for="sector">Sector</label><select id="sector"></select></div>
-      <div><label for="framework">Framework</label><select id="framework"><option value="">All frameworks</option><option>ISO/IEC 27001:2022</option><option>NIS2</option><option>ENS</option><option>SOC 2</option></select></div>
-      <div><label for="priority">Priority</label><select id="priority"><option value="">All priorities</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select></div>
-      <div><label for="domain">Domain</label><select id="domain"><option value="">All domains</option></select></div>
+      <div><label for="framework">Framework</label><select id="framework"><option value="">All mapped frameworks</option></select></div>
+      <div><label for="priority">Risk priority</label><select id="priority"><option value="">All priorities</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select></div>
+      <div><label for="domain">Technical domain</label><select id="domain"><option value="">All domains</option></select></div>
       <div><label for="asset">Asset criticality</label><select id="asset"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option><option>CRITICAL</option></select></div>
       <div><label for="data">Data sensitivity</label><select id="data"><option>PUBLIC</option><option selected>INTERNAL</option><option>CONFIDENTIAL</option><option>RESTRICTED</option></select></div>
       <div><label for="service">Service criticality</label><select id="service"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option><option>CRITICAL</option></select></div>
@@ -29,14 +29,29 @@
     </section>
 
     <section class="kpis" aria-label="Risk summary">
-      <article><span>Total findings</span><strong id="kpi-total">0</strong></article>
+      <article><span>Visible findings</span><strong id="kpi-total">0</strong></article>
       <article><span>Critical</span><strong id="kpi-critical">0</strong></article>
       <article><span>High</span><strong id="kpi-high">0</strong></article>
       <article><span>Average risk</span><strong id="kpi-average">0</strong></article>
     </section>
 
     <section class="panel">
-      <div class="section-head"><div><p class="eyebrow">Prioritized portfolio</p><h2>Technical findings</h2></div><input id="search" type="search" placeholder="Search finding, domain or evidence…"></div>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Prioritized portfolio</p>
+          <h2>Technical findings</h2>
+          <p id="portfolio-summary" class="notice">Loading finding catalog…</p>
+        </div>
+        <input id="search" type="search" placeholder="Search or choose from findings below…">
+      </div>
+      <div class="portfolio-toolbar">
+        <div class="toolbar-actions">
+          <button id="select-visible" class="secondary-button" type="button">Select visible</button>
+          <button id="clear-selected" class="secondary-button" type="button">Clear selection</button>
+          <button id="show-all" class="secondary-button" type="button" hidden>Show all</button>
+        </div>
+        <div class="selection-status"><strong id="selected-count">0 selected</strong><button id="analyze-selected" class="primary-button" type="button" disabled>Analyze selected</button></div>
+      </div>
       <div id="portfolio" class="portfolio"></div>
     </section>
 
