@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections import defaultdict
+from dataclasses import dataclass, field
 
 from control_mapper.engine import _load_dataset
 from control_mapper.models import (
@@ -18,6 +18,16 @@ _CONFIDENCE_RANK = {
 }
 
 
+@dataclass
+class _CoverageBucket:
+    title: str = ""
+    passes: set[str] = field(default_factory=set)
+    fails: set[str] = field(default_factory=set)
+    unknowns: set[str] = field(default_factory=set)
+    evidence: set[str] = field(default_factory=set)
+    confidences: list[MappingConfidence] = field(default_factory=list)
+
+
 def _effective_confidence(framework: str, configured: MappingConfidence) -> MappingConfidence:
     if configured is not MappingConfidence.CONTEXTUAL:
         return configured
@@ -28,17 +38,12 @@ def _effective_confidence(framework: str, configured: MappingConfidence) -> Mapp
 
 def calculate_coverage(observations: list[TechnicalObservation]) -> list[CoverageResult]:
     version, records = _load_dataset()
-    observed = {item.check_id: item for item in observations}
-    buckets: dict[tuple[str, str], dict[str, object]] = defaultdict(
-        lambda: {
-            "title": "",
-            "passes": [],
-            "fails": [],
-            "unknowns": [],
-            "evidence": set(),
-            "confidences": [],
-        }
-    )
+    observed = {
+        item.check_id: item
+        for item in observations
+        if item.status is not ObservationStatus.NOT_APPLICABLE
+    }
+    buckets: dict[tuple[str, str], _CoverageBucket] = {}
 
     for record in records:
         matched = [observed[cid] for cid in record.source_check_ids if cid in observed]
@@ -46,25 +51,26 @@ def calculate_coverage(observations: list[TechnicalObservation]) -> list[Coverag
             continue
         for reference in record.references:
             key = (reference.framework, reference.reference)
-            bucket = buckets[key]
-            bucket["title"] = reference.title
-            confidence = _effective_confidence(reference.framework, reference.confidence)
-            bucket["confidences"].append(confidence)  # type: ignore[union-attr]
+            bucket = buckets.setdefault(key, _CoverageBucket())
+            bucket.title = reference.title
+            bucket.confidences.append(
+                _effective_confidence(reference.framework, reference.confidence)
+            )
             for observation in matched:
                 if observation.status is ObservationStatus.PASS:
-                    bucket["passes"].append(observation.check_id)  # type: ignore[union-attr]
+                    bucket.passes.add(observation.check_id)
                 elif observation.status is ObservationStatus.FAIL:
-                    bucket["fails"].append(observation.check_id)  # type: ignore[union-attr]
-                    bucket["evidence"].update(record.evidence_needed)  # type: ignore[union-attr]
+                    bucket.fails.add(observation.check_id)
+                    bucket.evidence.update(record.evidence_needed)
                 elif observation.status in {ObservationStatus.UNKNOWN, ObservationStatus.ERROR}:
-                    bucket["unknowns"].append(observation.check_id)  # type: ignore[union-attr]
-                    bucket["evidence"].update(record.evidence_needed)  # type: ignore[union-attr]
+                    bucket.unknowns.add(observation.check_id)
+                    bucket.evidence.update(record.evidence_needed)
 
     results: list[CoverageResult] = []
     for (framework, reference), bucket in buckets.items():
-        passes = sorted(set(bucket["passes"]))  # type: ignore[arg-type]
-        fails = sorted(set(bucket["fails"]))  # type: ignore[arg-type]
-        unknowns = sorted(set(bucket["unknowns"]))  # type: ignore[arg-type]
+        passes = sorted(bucket.passes)
+        fails = sorted(bucket.fails)
+        unknowns = sorted(bucket.unknowns)
         if fails and passes:
             status = CoverageStatus.PARTIAL
         elif fails:
@@ -75,19 +81,18 @@ def calculate_coverage(observations: list[TechnicalObservation]) -> list[Coverag
             status = CoverageStatus.UNKNOWN
         else:
             status = CoverageStatus.SUPPORTED
-        confidences = bucket["confidences"]  # type: ignore[assignment]
-        confidence = max(confidences, key=lambda item: _CONFIDENCE_RANK[item])
+        confidence = max(bucket.confidences, key=_CONFIDENCE_RANK.__getitem__)
         results.append(
             CoverageResult(
                 framework=framework,
                 reference=reference,
-                title=str(bucket["title"]),
+                title=bucket.title,
                 status=status,
                 confidence=confidence,
                 supporting_checks=passes,
                 failing_checks=fails,
                 unknown_checks=unknowns,
-                evidence_needed=sorted(bucket["evidence"]),  # type: ignore[arg-type]
+                evidence_needed=sorted(bucket.evidence),
                 mapping_version=version,
             )
         )
