@@ -28,6 +28,13 @@ jobs:
         run: mypy src
       - name: Tests + coverage
         run: pytest --cov=control_mapper --cov-report=term-missing --cov-fail-under=80
+      - name: Finding catalog data in sync
+        run: cmp src/control_mapper/data/findings-v0.2.json docs/data/findings-v0.2.json
+      - name: Mapping data in sync when docs copy exists
+        run: |
+          if [ -f docs/data/mappings-v0.1.json ]; then
+            cmp src/control_mapper/data/mappings-v0.1.json docs/data/mappings-v0.1.json
+          fi
       - name: Bandit
         run: bandit -q -r src
       - name: Dependency audit
