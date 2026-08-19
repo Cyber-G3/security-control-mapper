@@ -40,3 +40,5 @@ jobs:
           fi
           git commit -m "chore: deploy security-control-mapper full archive"
           git push
+
+# Triggered after validating the uploaded full archive.
