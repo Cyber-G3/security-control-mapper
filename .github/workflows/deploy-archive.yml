@@ -1,0 +1,42 @@
+name: Deploy uploaded project archive
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/deploy-archive.yml'
+      - 'security-control-mapper-full.zip'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract full project archive
+        run: |
+          test -f security-control-mapper-full.zip
+          tmp="$(mktemp -d)"
+          unzip -q security-control-mapper-full.zip -d "$tmp"
+          rsync -a --exclude='.git/' --exclude='.github/' "$tmp/" ./
+          rm -f security-control-mapper-full.zip
+
+      - name: Validate Python tests
+        run: PYTHONPATH=src python -m pytest -q
+
+      - name: Commit deployed project
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No archive changes to deploy."
+            exit 0
+          fi
+          git commit -m "chore: deploy security-control-mapper full archive"
+          git push
