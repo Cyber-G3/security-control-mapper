@@ -10,6 +10,8 @@ from control_mapper.collector_pack import load_evidence_pack_observations
 from control_mapper.coverage import calculate_coverage
 from control_mapper.engine import list_finding_types, map_finding
 from control_mapper.models import TechnicalObservation
+from control_mapper.report_export import export_summary, render_markdown
+from control_mapper.reporting import summarize_coverage
 
 app = typer.Typer(help="Map technical security findings to supporting control references.")
 
@@ -122,7 +124,6 @@ def coverage_pack(
     evidence_pack: Path = typer.Argument(..., exists=True, file_okay=False, readable=True),
     json_output: bool = typer.Option(False, "--json"),
 ) -> None:
-    """Calculate coverage directly from a Security Evidence Collector Evidence Pack."""
     try:
         observations = load_evidence_pack_observations(evidence_pack)
         results = calculate_coverage(observations)
@@ -130,6 +131,31 @@ def coverage_pack(
         typer.echo(f"Evidence Pack coverage failed: {exc}", err=True)
         raise typer.Exit(code=2) from exc
     _render_coverage(results, json_output)
+
+
+@app.command("assurance-report")
+def assurance_report(
+    evidence_pack: Path = typer.Argument(..., exists=True, file_okay=False, readable=True),
+    output: Path | None = typer.Option(None, "--output", "-o"),
+    json_output: bool = typer.Option(False, "--json"),
+) -> None:
+    """Generate management-level assurance reporting from an Evidence Pack."""
+    try:
+        observations = load_evidence_pack_observations(evidence_pack)
+        coverage = calculate_coverage(observations)
+        summary = summarize_coverage(coverage)
+        if output is not None:
+            export_summary(summary, output)
+    except Exception as exc:
+        typer.echo(f"Assurance reporting failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+
+    if json_output:
+        typer.echo(json.dumps(summary.to_dict(), indent=2))
+    else:
+        typer.echo(render_markdown(summary))
+    if output is not None:
+        typer.echo(f"Exported: {output}")
 
 
 if __name__ == "__main__":
