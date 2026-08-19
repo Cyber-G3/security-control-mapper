@@ -17,7 +17,8 @@ def test_partial_when_shared_control_has_pass_and_fail():
         TechnicalObservation(check_id="github.branch.required_reviews", status=ObservationStatus.FAIL),
     ])
     iso = [
-        item for item in results
+        item
+        for item in results
         if item.framework == "ISO/IEC 27001:2022" and item.reference == "A.8.32"
     ]
     assert iso and iso[0].status is CoverageStatus.PARTIAL
@@ -27,7 +28,20 @@ def test_partial_when_shared_control_has_pass_and_fail():
 
 def test_unknown_is_not_treated_as_gap():
     results = calculate_coverage([
-        TechnicalObservation(check_id="github.security.secret_scanning", status=ObservationStatus.UNKNOWN)
+        TechnicalObservation(
+            check_id="github.security.secret_scanning",
+            status=ObservationStatus.UNKNOWN,
+        )
     ])
     assert results
     assert all(item.status is CoverageStatus.UNKNOWN for item in results)
+
+
+def test_not_applicable_does_not_create_supported_coverage():
+    results = calculate_coverage([
+        TechnicalObservation(
+            check_id="github.branch.protection",
+            status=ObservationStatus.NOT_APPLICABLE,
+        )
+    ])
+    assert results == []
