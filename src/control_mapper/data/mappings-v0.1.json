@@ -1,0 +1,47 @@
+{
+  "mapping_version": "0.1",
+  "records": [
+    {
+      "finding_type": "branch-protection-disabled",
+      "title": "Default branch protection is disabled",
+      "description": "Changes to the default branch can be introduced without configured branch-protection safeguards.",
+      "evidence_needed": ["Branch protection configuration", "Change approval workflow", "Repository governance policy"],
+      "references": [
+        {"framework": "ISO/IEC 27001:2022", "reference": "A.8.32", "title": "Change management", "relevance": "Supports controlled changes to information processing facilities and systems."},
+        {"framework": "NIS2", "reference": "Article 21(2)(e)", "title": "Security in network and information systems acquisition, development and maintenance", "relevance": "Potentially relevant to secure development and change-control practices."},
+        {"framework": "SOC 2", "reference": "CC8.1", "title": "Change management", "relevance": "Potentially relevant to authorization and management of system changes."}
+      ]
+    },
+    {
+      "finding_type": "required-pr-reviews-disabled",
+      "title": "Required pull-request reviews are disabled",
+      "description": "Repository changes may be merged without independent review.",
+      "evidence_needed": ["Pull-request approval rules", "CODEOWNERS or reviewer assignment evidence", "Change records"],
+      "references": [
+        {"framework": "ISO/IEC 27001:2022", "reference": "A.8.32", "title": "Change management", "relevance": "Supports review and authorization of changes."},
+        {"framework": "SOC 2", "reference": "CC8.1", "title": "Change management", "relevance": "Supports controlled and authorized system changes."}
+      ]
+    },
+    {
+      "finding_type": "secret-scanning-disabled",
+      "title": "Secret scanning is disabled",
+      "description": "The repository is not configured to detect committed credentials or secrets through GitHub secret scanning.",
+      "evidence_needed": ["Secret scanning configuration", "Credential management procedure", "Secret rotation evidence"],
+      "references": [
+        {"framework": "ISO/IEC 27001:2022", "reference": "A.8.24", "title": "Use of cryptography", "relevance": "Potentially relevant where exposed cryptographic material or secrets are involved."},
+        {"framework": "ISO/IEC 27001:2022", "reference": "A.5.17", "title": "Authentication information", "relevance": "Relevant to protection and management of authentication information."},
+        {"framework": "NIS2", "reference": "Article 21(2)(j)", "title": "Multi-factor authentication or continuous authentication solutions", "relevance": "Potential supporting relevance to protection of authentication mechanisms; mapping is not equivalence."}
+      ]
+    },
+    {
+      "finding_type": "security-policy-missing",
+      "title": "SECURITY.md is missing",
+      "description": "The repository does not publish a repository-level security policy or vulnerability reporting path.",
+      "evidence_needed": ["Security policy", "Vulnerability disclosure process", "Security contact or intake mechanism"],
+      "references": [
+        {"framework": "ISO/IEC 27001:2022", "reference": "A.5.24", "title": "Information security incident management planning and preparation", "relevance": "Supports defined preparation and reporting arrangements."},
+        {"framework": "NIS2", "reference": "Article 21(2)(b)", "title": "Incident handling", "relevance": "Potentially relevant to incident and vulnerability handling arrangements."}
+      ]
+    }
+  ]
+}
