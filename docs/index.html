@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>SpectraSec Security Control Mapper</title>
-  <meta name="description" content="Analyze selected technical findings, contextual risk and supporting control references across security frameworks.">
+  <meta name="description" content="Explore technical findings, contextual risk and supporting control references across ISO 27001, NIS2, ENS and SOC 2.">
   <link rel="canonical" href="https://cyber-g3.github.io/security-control-mapper/">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,38 +13,37 @@
     <section class="hero">
       <p class="eyebrow">SpectraSec Open Source</p>
       <h1>Security Control & Risk Explorer</h1>
-      <p class="lede">Select technical findings, apply business context, and run a deterministic risk and control analysis.</p>
+      <p class="lede">Prioritize technical findings using explicit business context, then explore supporting control references and expected evidence.</p>
       <p class="notice">Risk scores and framework mappings are decision-support indicators. They do not establish compliance, certification or legal applicability.</p>
     </section>
 
     <section class="panel controls">
       <div><label for="sector">Sector</label><select id="sector"></select></div>
-      <div><label for="framework">Framework</label><select id="framework"><option value="">All frameworks</option></select></div>
-      <div><label for="priority">Result priority</label><select id="priority"><option value="">All priorities</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select></div>
-      <div><label for="domain">Technical domain</label><select id="domain"><option value="">All domains</option></select></div>
+      <div><label for="framework">Framework</label><select id="framework"><option value="">All frameworks</option><option>ISO/IEC 27001:2022</option><option>NIS2</option><option>ENS</option><option>SOC 2</option></select></div>
+      <div><label for="priority">Priority</label><select id="priority"><option value="">All priorities</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option></select></div>
+      <div><label for="domain">Domain</label><select id="domain"><option value="">All domains</option></select></div>
       <div><label for="asset">Asset criticality</label><select id="asset"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option><option>CRITICAL</option></select></div>
       <div><label for="data">Data sensitivity</label><select id="data"><option>PUBLIC</option><option selected>INTERNAL</option><option>CONFIDENTIAL</option><option>RESTRICTED</option></select></div>
       <div><label for="service">Service criticality</label><select id="service"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option><option>CRITICAL</option></select></div>
       <div class="checks"><label><input id="internet" type="checkbox"> Internet exposed</label><label><input id="active" type="checkbox"> Active exploitation</label><label><input id="compensating" type="checkbox"> Compensating controls</label></div>
     </section>
 
-    <section class="panel">
-      <div class="section-head"><div><p class="eyebrow">Assessment input</p><h2>Technical findings</h2><p class="notice">Choose the findings that apply, then run the analysis.</p></div><input id="search" type="search" placeholder="Search finding, domain or evidence…"></div>
-      <div class="selection-toolbar"><div><button id="select-all" class="secondary" type="button">Select visible</button><button id="clear-selection" class="secondary" type="button">Clear</button></div><strong id="selected-count">0 selected</strong></div>
-      <div id="finding-selector" class="finding-selector"></div>
-      <div class="analysis-action"><button id="analyze" class="primary" type="button" disabled>Analyze selected findings</button><span class="notice">Analysis uses the context configured above.</span></div>
+    <section class="kpis" aria-label="Risk summary">
+      <article><span>Total findings</span><strong id="kpi-total">0</strong></article>
+      <article><span>Critical</span><strong id="kpi-critical">0</strong></article>
+      <article><span>High</span><strong id="kpi-high">0</strong></article>
+      <article><span>Average risk</span><strong id="kpi-average">0</strong></article>
     </section>
 
-    <section id="results" class="results-section" hidden>
-      <div class="results-title"><div><p class="eyebrow">Analysis results</p><h2>Prioritized portfolio</h2></div><span id="analysis-context" class="notice"></span></div>
-      <section class="kpis" aria-label="Risk summary">
-        <article><span>Analyzed</span><strong id="kpi-total">0</strong></article>
-        <article><span>Critical</span><strong id="kpi-critical">0</strong></article>
-        <article><span>High</span><strong id="kpi-high">0</strong></article>
-        <article><span>Average risk</span><strong id="kpi-average">0</strong></article>
-      </section>
-      <section class="panel"><div id="portfolio" class="portfolio"></div></section>
-      <section class="panel"><p class="eyebrow">Control analysis</p><h2>Finding detail</h2><div id="detail" class="detail" aria-live="polite"></div></section>
+    <section class="panel">
+      <div class="section-head"><div><p class="eyebrow">Prioritized portfolio</p><h2>Technical findings</h2></div><input id="search" type="search" placeholder="Search finding, domain or evidence…"></div>
+      <div id="portfolio" class="portfolio"></div>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">Control analysis</p>
+      <h2>Finding detail</h2>
+      <div id="detail" class="detail" aria-live="polite"><p class="notice">Select a finding from the prioritized portfolio.</p></div>
     </section>
   </main>
   <script src="app.js"></script>
