@@ -6,6 +6,7 @@ from pathlib import Path
 import typer
 
 from control_mapper.batch import export_results, map_batch, map_collector_findings
+from control_mapper.collector_pack import load_evidence_pack_observations
 from control_mapper.coverage import calculate_coverage
 from control_mapper.engine import list_finding_types, map_finding
 from control_mapper.models import TechnicalObservation
@@ -29,11 +30,9 @@ def map_command(
     except KeyError as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=2) from exc
-
     if json_output:
         typer.echo(json.dumps(result.model_dump(mode="json"), indent=2))
         return
-
     typer.echo(f"{result.finding_type}: {result.title}")
     typer.echo(f"Mapping version: {result.mapping_version}")
     typer.echo("Evidence needed:")
@@ -60,7 +59,6 @@ def map_file(
     except (KeyError, ValueError) as exc:
         typer.echo(f"Mapping failed: {exc}", err=True)
         raise typer.Exit(code=2) from exc
-
     for result in results:
         typer.echo(f"{result.finding_type}: {len(result.references)} references")
     if output is not None:
@@ -79,7 +77,6 @@ def map_collector(
     except ValueError as exc:
         typer.echo(f"Collector mapping failed: {exc}", err=True)
         raise typer.Exit(code=2) from exc
-
     typer.echo(f"Mapped {len(results)} collector findings")
     for result in results:
         typer.echo(
@@ -90,12 +87,23 @@ def map_collector(
         typer.echo(f"Exported: {output}")
 
 
+def _render_coverage(results, json_output: bool) -> None:
+    if json_output:
+        typer.echo(json.dumps([item.model_dump(mode="json") for item in results], indent=2))
+        return
+    typer.echo("Status    | Confidence | Framework | Reference | Evidence gaps")
+    for item in results:
+        typer.echo(
+            f"{item.status.value:<9} | {item.confidence.value:<10} | {item.framework} | "
+            f"{item.reference} | {len(item.evidence_needed)}"
+        )
+
+
 @app.command("coverage")
 def coverage_command(
     observations_path: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
     json_output: bool = typer.Option(False, "--json"),
 ) -> None:
-    """Calculate evidence-support coverage from technical observations."""
     try:
         payload = json.loads(observations_path.read_text(encoding="utf-8"))
         raw = payload.get("observations", payload) if isinstance(payload, dict) else payload
@@ -106,17 +114,22 @@ def coverage_command(
     except Exception as exc:
         typer.echo(f"Coverage analysis failed: {exc}", err=True)
         raise typer.Exit(code=2) from exc
+    _render_coverage(results, json_output)
 
-    if json_output:
-        typer.echo(json.dumps([item.model_dump(mode="json") for item in results], indent=2))
-        return
 
-    typer.echo("Status    | Confidence | Framework | Reference | Evidence gaps")
-    for item in results:
-        typer.echo(
-            f"{item.status.value:<9} | {item.confidence.value:<10} | {item.framework} | "
-            f"{item.reference} | {len(item.evidence_needed)}"
-        )
+@app.command("coverage-pack")
+def coverage_pack(
+    evidence_pack: Path = typer.Argument(..., exists=True, file_okay=False, readable=True),
+    json_output: bool = typer.Option(False, "--json"),
+) -> None:
+    """Calculate coverage directly from a Security Evidence Collector Evidence Pack."""
+    try:
+        observations = load_evidence_pack_observations(evidence_pack)
+        results = calculate_coverage(observations)
+    except Exception as exc:
+        typer.echo(f"Evidence Pack coverage failed: {exc}", err=True)
+        raise typer.Exit(code=2) from exc
+    _render_coverage(results, json_output)
 
 
 if __name__ == "__main__":
