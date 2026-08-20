@@ -30,6 +30,9 @@ control-map = "control_mapper.cli:app"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+control_mapper = ["data/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
