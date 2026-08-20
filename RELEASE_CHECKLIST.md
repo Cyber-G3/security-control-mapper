@@ -25,9 +25,9 @@
 - [x] Bandit configured
 - [x] pip-audit configured
 - [x] End-to-end smoke workflow configured
-- [x] 44 tests passed and 80.43% coverage on release-candidate branch before final cleanup
-- [ ] CI green on final release commit
-- [ ] Smoke test green
+- [x] 44 tests passed and 80.43% coverage on release-candidate branch
+- [x] CI green on current release-candidate head
+- [ ] Smoke test green on final release state
 
 ## Documentation and governance
 
@@ -39,12 +39,14 @@
 - [x] GitHub Pages workflow configured
 - [x] Public demo files committed
 - [x] Bundled repository ZIP removed from release branch
-- [ ] GitHub Pages live verification
+- [ ] GitHub Pages live verification on final release state
 - [ ] Public demo smoke check
 
 ## Release
 
 - [x] Package version set to 0.1.0
+- [x] Release-candidate CI green
+- [ ] Re-run CI after merge to `main`
 - [ ] Tag v0.1.0
 - [ ] GitHub Release v0.1.0
 
