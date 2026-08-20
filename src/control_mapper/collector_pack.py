@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from control_mapper.models import TechnicalObservation
+from control_mapper.models import ObservationStatus, TechnicalObservation
 
 
 def load_evidence_pack_observations(pack_path: Path) -> list[TechnicalObservation]:
@@ -17,9 +17,13 @@ def load_evidence_pack_observations(pack_path: Path) -> list[TechnicalObservatio
         if not isinstance(payload, dict):
             continue
         check_id = str(payload.get("check_id") or "").strip()
-        status = str(payload.get("status") or "").strip().upper()
-        if not check_id or not status:
+        status_raw = str(payload.get("status") or "").strip().upper()
+        if not check_id or not status_raw:
             continue
+        try:
+            status = ObservationStatus(status_raw)
+        except ValueError:
+            status = ObservationStatus.UNKNOWN
         observations.append(
             TechnicalObservation(
                 check_id=check_id,
