@@ -39,9 +39,9 @@ def _effective_confidence(framework: str, configured: MappingConfidence) -> Mapp
 def calculate_coverage(observations: list[TechnicalObservation]) -> list[CoverageResult]:
     version, records, _metadata = _load_dataset()
     observed = {
-        item.check_id: item
-        for item in observations
-        if item.status is not ObservationStatus.NOT_APPLICABLE
+        observation.check_id: observation
+        for observation in observations
+        if observation.status is not ObservationStatus.NOT_APPLICABLE
     }
     buckets: dict[tuple[str, str], _CoverageBucket] = {}
 
@@ -49,12 +49,15 @@ def calculate_coverage(observations: list[TechnicalObservation]) -> list[Coverag
         matched = [observed[cid] for cid in record.source_check_ids if cid in observed]
         if not matched:
             continue
-        for reference in record.references:
-            key = (reference.framework, reference.reference)
+        for framework_reference in record.references:
+            key = (framework_reference.framework, framework_reference.reference)
             bucket = buckets.setdefault(key, _CoverageBucket())
-            bucket.title = reference.title
+            bucket.title = framework_reference.title
             bucket.confidences.append(
-                _effective_confidence(reference.framework, reference.confidence)
+                _effective_confidence(
+                    framework_reference.framework,
+                    framework_reference.confidence,
+                )
             )
             for observation in matched:
                 if observation.status is ObservationStatus.PASS:
@@ -67,7 +70,7 @@ def calculate_coverage(observations: list[TechnicalObservation]) -> list[Coverag
                     bucket.evidence.update(record.evidence_needed)
 
     results: list[CoverageResult] = []
-    for (framework, reference), bucket in buckets.items():
+    for (framework, reference_id), bucket in buckets.items():
         passes = sorted(bucket.passes)
         fails = sorted(bucket.fails)
         unknowns = sorted(bucket.unknowns)
@@ -85,7 +88,7 @@ def calculate_coverage(observations: list[TechnicalObservation]) -> list[Coverag
         results.append(
             CoverageResult(
                 framework=framework,
-                reference=reference,
+                reference=reference_id,
                 title=bucket.title,
                 status=status,
                 confidence=confidence,
@@ -96,4 +99,4 @@ def calculate_coverage(observations: list[TechnicalObservation]) -> list[Coverag
                 mapping_version=version,
             )
         )
-    return sorted(results, key=lambda item: (item.framework, item.reference))
+    return sorted(results, key=lambda result: (result.framework, result.reference))
