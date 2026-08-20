@@ -45,4 +45,4 @@ def test_export_results_json(tmp_path: Path):
     export_results(results, output)
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload[0]["finding_type"] == "required-pr-reviews-disabled"
-    assert payload[0]["mapping_version"] == "0.2"
+    assert payload[0]["mapping_version"] == "0.3"
