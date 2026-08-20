@@ -27,7 +27,7 @@
 - [x] End-to-end smoke workflow configured
 - [x] 44 tests passed and 80.43% coverage on release-candidate branch
 - [x] CI green on current release-candidate head
-- [ ] Smoke test green on final release state
+- [x] Mapper CLI + coverage smoke workflow green on the pull-request release candidate
 
 ## Documentation and governance
 
@@ -45,8 +45,8 @@
 ## Release
 
 - [x] Package version set to 0.1.0
-- [x] Release-candidate CI green
-- [ ] Re-run CI after merge to `main`
+- [x] Release-candidate CI and smoke workflows green
+- [ ] Re-run CI/smoke after merge to `main`
 - [ ] Tag v0.1.0
 - [ ] GitHub Release v0.1.0
 
