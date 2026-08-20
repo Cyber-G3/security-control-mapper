@@ -35,6 +35,8 @@ def _to_result(
     source_severity: str | None = None,
 ) -> MappingResult:
     raw_sources = metadata.get("sources", [])
+    if not isinstance(raw_sources, list):
+        raise ValueError("Mapping provenance sources must be a list")
     mapping_sources = [MappingSource.model_validate(item) for item in raw_sources]
     return MappingResult(
         finding_type=record.finding_type,
