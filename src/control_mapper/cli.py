@@ -10,7 +10,7 @@ from control_mapper.batch import export_results, map_batch, map_collector_findin
 from control_mapper.collector_pack import load_evidence_pack_observations
 from control_mapper.coverage import calculate_coverage
 from control_mapper.engine import list_finding_types, map_finding
-from control_mapper.models import TechnicalObservation
+from control_mapper.models import CoverageResult, TechnicalObservation
 from control_mapper.report_export import export_summary, render_markdown
 from control_mapper.reporting import summarize_coverage
 
@@ -96,7 +96,7 @@ def map_collector(
         typer.echo(f"Exported: {output}")
 
 
-def _render_coverage(results, json_output: bool) -> None:
+def _render_coverage(results: list[CoverageResult], json_output: bool) -> None:
     if json_output:
         typer.echo(json.dumps([item.model_dump(mode="json") for item in results], indent=2))
         return
