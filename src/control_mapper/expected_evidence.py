@@ -5,7 +5,6 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
-
 CATALOG_PATH = Path(__file__).with_name("data") / "expected-evidence-v1.json"
 
 
