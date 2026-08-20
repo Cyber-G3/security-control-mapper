@@ -1,0 +1,30 @@
+{
+  "dataset_file": "mappings-v0.1.json",
+  "mapping_version": "0.3",
+  "metadata_version": "1.0",
+  "effective_date": "2026-08-20",
+  "reviewed_at": "2026-08-20",
+  "sources": [
+    {
+      "framework": "NIS2",
+      "source": "Directive (EU) 2022/2555",
+      "relationship": "supporting-reference"
+    },
+    {
+      "framework": "ISO/IEC 27001:2022",
+      "source": "ISO/IEC 27001:2022 control references",
+      "relationship": "supporting-reference"
+    },
+    {
+      "framework": "ENS",
+      "source": "Esquema Nacional de Seguridad control references",
+      "relationship": "contextual-reference"
+    },
+    {
+      "framework": "SOC 2",
+      "source": "Trust Services Criteria references",
+      "relationship": "supporting-reference"
+    }
+  ],
+  "disclaimer": "Mappings organize technical observations against potentially relevant control references. They do not establish legal applicability, conformity, certification or framework equivalence."
+}
