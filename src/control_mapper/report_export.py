@@ -6,6 +6,12 @@ from pathlib import Path
 from control_mapper.reporting import AssuranceSummary
 
 
+def _string_list(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, str)]
+
+
 def render_markdown(summary: AssuranceSummary) -> str:
     lines = [
         "# Security Assurance Coverage Report",
@@ -42,9 +48,9 @@ def render_markdown(summary: AssuranceSummary) -> str:
             lines.append(str(action["title"]))
             lines.append("")
             lines.append(f"Mapping confidence: **{action['confidence']}**")
-            failing = action["failing_checks"]
-            unknown = action["unknown_checks"]
-            evidence = action["evidence_needed"]
+            failing = _string_list(action["failing_checks"])
+            unknown = _string_list(action["unknown_checks"])
+            evidence = _string_list(action["evidence_needed"])
             if failing:
                 lines.append(f"\nFailing checks: {', '.join(failing)}")
             if unknown:
