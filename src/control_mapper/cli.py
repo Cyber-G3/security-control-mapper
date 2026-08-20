@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Annotated
 
 import typer
 
@@ -15,6 +16,12 @@ from control_mapper.reporting import summarize_coverage
 
 app = typer.Typer(help="Map technical security findings to supporting control references.")
 
+FindingTypeArg = Annotated[str, typer.Argument(help="Normalized finding type.")]
+InputFileArg = Annotated[Path, typer.Argument(exists=True, dir_okay=False, readable=True)]
+InputDirArg = Annotated[Path, typer.Argument(exists=True, file_okay=False, readable=True)]
+OutputOption = Annotated[Path | None, typer.Option("--output", "-o")]
+JsonOption = Annotated[bool, typer.Option("--json", help="Emit machine-readable JSON.")]
+
 
 @app.command("list-findings")
 def list_findings() -> None:
@@ -24,8 +31,8 @@ def list_findings() -> None:
 
 @app.command("map")
 def map_command(
-    finding_type: str = typer.Argument(..., help="Normalized finding type."),
-    json_output: bool = typer.Option(False, "--json", help="Emit machine-readable JSON."),
+    finding_type: FindingTypeArg,
+    json_output: JsonOption = False,
 ) -> None:
     try:
         result = map_finding(finding_type)
@@ -51,8 +58,8 @@ def map_command(
 
 @app.command("map-file")
 def map_file(
-    input_path: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
-    output: Path | None = typer.Option(None, "--output", "-o"),
+    input_path: InputFileArg,
+    output: OutputOption = None,
 ) -> None:
     try:
         results = map_batch(input_path)
@@ -69,8 +76,8 @@ def map_file(
 
 @app.command("map-collector")
 def map_collector(
-    findings_path: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
-    output: Path | None = typer.Option(None, "--output", "-o"),
+    findings_path: InputFileArg,
+    output: OutputOption = None,
 ) -> None:
     try:
         results = map_collector_findings(findings_path)
@@ -103,14 +110,14 @@ def _render_coverage(results, json_output: bool) -> None:
 
 @app.command("coverage")
 def coverage_command(
-    observations_path: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
-    json_output: bool = typer.Option(False, "--json"),
+    observations_path: InputFileArg,
+    json_output: JsonOption = False,
 ) -> None:
     try:
         payload = json.loads(observations_path.read_text(encoding="utf-8"))
         raw = payload.get("observations", payload) if isinstance(payload, dict) else payload
         if not isinstance(raw, list):
-            raise ValueError("Expected a JSON list or an object with an observations list")
+            raise TypeError("Expected a JSON list or an object with an observations list")
         observations = [TechnicalObservation.model_validate(item) for item in raw]
         results = calculate_coverage(observations)
     except Exception as exc:
@@ -121,8 +128,8 @@ def coverage_command(
 
 @app.command("coverage-pack")
 def coverage_pack(
-    evidence_pack: Path = typer.Argument(..., exists=True, file_okay=False, readable=True),
-    json_output: bool = typer.Option(False, "--json"),
+    evidence_pack: InputDirArg,
+    json_output: JsonOption = False,
 ) -> None:
     try:
         observations = load_evidence_pack_observations(evidence_pack)
@@ -135,9 +142,9 @@ def coverage_pack(
 
 @app.command("assurance-report")
 def assurance_report(
-    evidence_pack: Path = typer.Argument(..., exists=True, file_okay=False, readable=True),
-    output: Path | None = typer.Option(None, "--output", "-o"),
-    json_output: bool = typer.Option(False, "--json"),
+    evidence_pack: InputDirArg,
+    output: OutputOption = None,
+    json_output: JsonOption = False,
 ) -> None:
     """Generate management-level assurance reporting from an Evidence Pack."""
     try:
