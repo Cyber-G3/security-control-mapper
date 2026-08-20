@@ -43,6 +43,12 @@ class MappingRecord(BaseModel):
     references: list[FrameworkReference] = Field(default_factory=list)
 
 
+class MappingSource(BaseModel):
+    framework: str
+    source: str
+    relationship: str
+
+
 class MappingResult(BaseModel):
     finding_type: str
     title: str
@@ -50,6 +56,9 @@ class MappingResult(BaseModel):
     evidence_needed: list[str]
     references: list[FrameworkReference]
     mapping_version: str
+    mapping_effective_date: str | None = None
+    mapping_metadata_version: str | None = None
+    mapping_sources: list[MappingSource] = Field(default_factory=list)
     source_check_id: str | None = None
     source_finding_id: str | None = None
     source_severity: str | None = None
