@@ -3,7 +3,7 @@ LInk: https://cyber-g3.github.io/security-control-mapper/
 
 Open-source, deterministic mapping engine that relates technical security findings and evidence to control references across multiple frameworks.
 
-> Development status: **Alpha / v0.1-dev**
+> Development status: **v0.1.0 Release Candidate**
 
 ## Goal
 
