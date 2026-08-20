@@ -1,11 +1,12 @@
 import json
 from pathlib import Path
 
+from typer.testing import CliRunner
+
 from control_mapper.cli import app
 from control_mapper.portfolio import FindingInput, prioritize_findings
 from control_mapper.report_export import export_summary, render_markdown
 from control_mapper.reporting import AssuranceSummary, FrameworkSummary
-from typer.testing import CliRunner
 
 
 runner = CliRunner()
