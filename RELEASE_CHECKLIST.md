@@ -12,6 +12,9 @@
 - [x] Coverage Engine
 - [x] Evidence Gap Engine
 - [x] Assurance reporting
+- [x] Versioned Expected Evidence Catalogue
+- [x] Deterministic `required_evidence()` lookup
+- [x] Mapping provenance and effective-date metadata
 
 ## Quality gates
 
@@ -22,17 +25,20 @@
 - [x] Bandit configured
 - [x] pip-audit configured
 - [x] End-to-end smoke workflow configured
-- [ ] CI green on release commit
+- [x] 44 tests passed and 80.43% coverage on release-candidate branch before final cleanup
+- [ ] CI green on final release commit
 - [ ] Smoke test green
 
 ## Documentation and governance
 
 - [x] README
+- [x] README marks `v0.1.0 Release Candidate`
 - [x] SECURITY.md
 - [x] LICENSE file
 - [x] Release checklist
 - [x] GitHub Pages workflow configured
 - [x] Public demo files committed
+- [x] Bundled repository ZIP removed from release branch
 - [ ] GitHub Pages live verification
 - [ ] Public demo smoke check
 
