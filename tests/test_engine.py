@@ -11,7 +11,7 @@ def test_lists_initial_findings():
 
 def test_maps_branch_protection_to_versioned_references():
     result = map_finding("branch-protection-disabled")
-    assert result.mapping_version == "0.2"
+    assert result.mapping_version == "0.3"
     assert result.references
     assert any(ref.framework == "ISO/IEC 27001:2022" for ref in result.references)
     assert result.evidence_needed
