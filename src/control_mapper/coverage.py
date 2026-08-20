@@ -37,7 +37,7 @@ def _effective_confidence(framework: str, configured: MappingConfidence) -> Mapp
 
 
 def calculate_coverage(observations: list[TechnicalObservation]) -> list[CoverageResult]:
-    version, records = _load_dataset()
+    version, records, _metadata = _load_dataset()
     observed = {
         item.check_id: item
         for item in observations
