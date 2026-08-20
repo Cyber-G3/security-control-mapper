@@ -1,6 +1,11 @@
 name: Mapper Smoke Test
 
 on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - ".github/workflows/smoke.yml"
   push:
     branches: [main]
     paths:
