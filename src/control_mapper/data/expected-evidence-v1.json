@@ -1,0 +1,70 @@
+{
+  "catalog_version": "1.0",
+  "effective_date": "2026-08-20",
+  "records": [
+    {
+      "framework": "NIS2",
+      "reference": "Article 21(2)(b)",
+      "title": "Incident handling",
+      "source": "Directive (EU) 2022/2555",
+      "relationship": "SUPPORTING",
+      "expected_evidence": [
+        {"evidence_type": "procedure", "title": "Incident response procedure", "required": true},
+        {"evidence_type": "record", "title": "Incident register or case records", "required": true},
+        {"evidence_type": "test", "title": "Incident exercise or response test evidence", "required": false},
+        {"evidence_type": "governance", "title": "Escalation and notification roles", "required": true}
+      ]
+    },
+    {
+      "framework": "NIS2",
+      "reference": "Article 21(2)(d)",
+      "title": "Supply chain security",
+      "source": "Directive (EU) 2022/2555",
+      "relationship": "SUPPORTING",
+      "expected_evidence": [
+        {"evidence_type": "register", "title": "Critical supplier register", "required": true},
+        {"evidence_type": "assessment", "title": "Supplier security assessment", "required": true},
+        {"evidence_type": "contract", "title": "Security requirements in supplier agreements", "required": true},
+        {"evidence_type": "monitoring", "title": "Supplier reassessment or monitoring record", "required": false}
+      ]
+    },
+    {
+      "framework": "NIS2",
+      "reference": "Article 21(2)(e)",
+      "title": "Security in network and information systems acquisition, development and maintenance",
+      "source": "Directive (EU) 2022/2555",
+      "relationship": "SUPPORTING",
+      "expected_evidence": [
+        {"evidence_type": "policy", "title": "Secure development or change management standard", "required": true},
+        {"evidence_type": "configuration", "title": "Protected branch and approval configuration", "required": false},
+        {"evidence_type": "test", "title": "Security testing evidence", "required": true},
+        {"evidence_type": "record", "title": "Vulnerability remediation records", "required": true}
+      ]
+    },
+    {
+      "framework": "ISO/IEC 27001:2022",
+      "reference": "A.8.32",
+      "title": "Change management",
+      "source": "ISO/IEC 27001:2022 control reference",
+      "relationship": "SUPPORTING",
+      "expected_evidence": [
+        {"evidence_type": "procedure", "title": "Change management procedure", "required": true},
+        {"evidence_type": "record", "title": "Approved change records", "required": true},
+        {"evidence_type": "configuration", "title": "Repository approval controls", "required": false}
+      ]
+    },
+    {
+      "framework": "ISO/IEC 27001:2022",
+      "reference": "A.8.8",
+      "title": "Management of technical vulnerabilities",
+      "source": "ISO/IEC 27001:2022 control reference",
+      "relationship": "SUPPORTING",
+      "expected_evidence": [
+        {"evidence_type": "procedure", "title": "Vulnerability management procedure", "required": true},
+        {"evidence_type": "scan", "title": "Vulnerability scan or detection output", "required": true},
+        {"evidence_type": "record", "title": "Remediation and exception records", "required": true},
+        {"evidence_type": "metric", "title": "Patch or remediation SLA evidence", "required": false}
+      ]
+    }
+  ]
+}
