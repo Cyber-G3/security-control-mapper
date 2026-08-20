@@ -19,7 +19,7 @@ class CoverageStatus(StrEnum):
 
 
 class ObservationStatus(StrEnum):
-    PASS = "PASS"
+    PASS = "PASS"  # nosec B105 - status enum, not a credential
     FAIL = "FAIL"
     UNKNOWN = "UNKNOWN"
     NOT_APPLICABLE = "NOT_APPLICABLE"
