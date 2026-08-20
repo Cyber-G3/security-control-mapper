@@ -9,7 +9,7 @@ from control_mapper.reporting import AssuranceSummary
 def _string_list(value: object) -> list[str]:
     if not isinstance(value, list):
         return []
-    return [item for item in value if isinstance(item, str)]
+    return [entry for entry in value if isinstance(entry, str)]
 
 
 def render_markdown(summary: AssuranceSummary) -> str:
@@ -31,9 +31,11 @@ def render_markdown(summary: AssuranceSummary) -> str:
         "| Framework | Total | Supported | Partial | Gap | Unknown |",
         "|---|---:|---:|---:|---:|---:|",
     ]
-    for item in summary.frameworks:
+    for framework_summary in summary.frameworks:
         lines.append(
-            f"| {item.framework} | {item.total} | {item.supported} | {item.partial} | {item.gap} | {item.unknown} |"
+            f"| {framework_summary.framework} | {framework_summary.total} | "
+            f"{framework_summary.supported} | {framework_summary.partial} | "
+            f"{framework_summary.gap} | {framework_summary.unknown} |"
         )
 
     lines.extend(["", "## Prioritized evidence actions", ""])
@@ -57,8 +59,8 @@ def render_markdown(summary: AssuranceSummary) -> str:
                 lines.append(f"\nUnknown checks: {', '.join(unknown)}")
             if evidence:
                 lines.append("\nEvidence/actions needed:")
-                for item in evidence:
-                    lines.append(f"- {item}")
+                for evidence_item in evidence:
+                    lines.append(f"- {evidence_item}")
             lines.append("")
     return "\n".join(lines).rstrip() + "\n"
 
