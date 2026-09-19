@@ -105,6 +105,9 @@ ENS mappings are contextual and depend on system category, security dimensions a
 
 For the engineering and business case behind this project, see [docs/PORTFOLIO.md](docs/PORTFOLIO.md).
 
+- [Assurance Engineering architecture](docs/ASSURANCE-ENGINEERING.md)
+- [DemoCo mapping scenario](docs/DEMOCO-END-TO-END.md)
+
 ## License
 
 Apache-2.0.
