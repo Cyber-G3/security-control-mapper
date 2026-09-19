@@ -101,6 +101,10 @@ ENS mappings are contextual and depend on system category, security dimensions a
 - v0.3: management reports and mapping-version diff
 - v0.4: interactive GitHub Pages explorer
 
+## Portfolio case
+
+For the engineering and business case behind this project, see [docs/PORTFOLIO.md](docs/PORTFOLIO.md).
+
 ## License
 
 Apache-2.0.
